@@ -1,51 +1,37 @@
 #include <stdio.h>
-#include <math.h>
+#include "string.h"
 
-enum confectionery {
-    cake,
-    brownie,
-    candy
-};
 
 int main() {
-    printf("%d \n", candy);
-
-    struct parameters {
-        int x1, x2, x3, x4;
-        int y1, y2, y3, y4;
-        float p;
-    };
-
-    struct parameters figure;
-
-    figure.x1 = 1;
-    figure.y1 = 1;
-    figure.x2 = 1;
-    figure.y2 = 4;
-    figure.x3 = 7;
-    figure.y3 = 4;
-    figure.x4 = 7;
-    figure.y4 = 1;
-    float AB = sqrt(pow((figure.x2 - figure.x1), 2) + pow((figure.y2 - figure.y1), 2));
-    float BC = sqrt(pow((figure.x3 - figure.x2), 2) + pow((figure.y3 - figure.y2), 2));
-    figure.p = 2 * (AB + BC);
-    printf("Perimeter ABCD = %f\n", figure.p);
-
-    struct bitfield{
-        unsigned int play :1;
-        unsigned int pause :1;
-        unsigned int record :2;
-    };
-
-    union x
-    {
-        struct bitfield bitf;
-        unsigned int i;
-    };
-    union x y;
-    scanf("%x",&y.i);
-    printf("play %s\n",(y.bitf.play==1)?"On":"Off");
-    printf("pause %s\n",(y.bitf.pause==1)?"On":"Off");
-    printf("record %s\n",(y.bitf.record==1)?"On":"Off");
+    char string1[100];
+    char string2[100];
+    scanf("%s", string1);
+    scanf("%s", string2);
+//1.Осуществить конкатенацию (сложение) двух строк.
+    strcat(string1, string2);
+    printf("%s \n", string1);
+//4.Осуществить сравнение первых n символов двух строк.
+    int n;
+    scanf("%d", &n);
+    if (strncmp(string1, string2, n) == 0)
+        printf("Same\n");
+    else printf("Different\n");
+// 5.Осуществить копирование одной строки в другую строку.
+    char string3[100];
+    strcpy(string3, string2);
+    printf("%s\n", string3);
+// 8.Осуществить поиск в строке первого вхождения указанного символа.
+    int ch = 'x';
+    char *ach;
+    ach = strchr(string2, ch);
+    if (ach == NULL)
+        printf("symbol not found\n");
+    else
+        printf("symbol = %d\n", ach - string2 + 1);
+// 11.Определить длину отрезка одной строки, содержащего символы из множества символов,
+//входящих во вторую строку.
+    int y;
+    y = strspn(string1, string2);
+    printf("%d", y);
     return 0;
 }
