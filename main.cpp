@@ -1,37 +1,100 @@
-#include <stdio.h>
-#include "string.h"
+#include <iostream>
+#include <vector>
 
+using namespace std;
+
+struct vertex
+{
+vector<int> neighbours;
+int color;
+};
+const int white = 0;
+const int blue = 1;
+const int red = 2;
+
+bool bipartite(vector<vertex>& graph, int vertex)
+{
+if (graph[vertex].color == blue)
+{
+for (int v : graph[vertex].neighbours)
+{
+if (vertex != v) {
+if (graph[v].color == white) {
+graph[v].color = red;
+bool res = bipartite(graph, v);
+if (res == false) {
+return false;
+}
+} else if (graph[v].color == blue) {
+return false;
+}
+}
+}
+}
+else if (graph[vertex].color == red)
+{
+for (int v : graph[vertex].neighbours)
+{
+if (vertex != v) {
+if (graph[v].color == white) {
+graph[v].color = blue;
+bool res = bipartite(graph, v);
+if (res == false) {
+return false;
+}
+} else if (graph[v].color == red) {
+return false;
+}
+}
+}
+}
+else
+{
+graph[vertex].color = blue;
+for (int v : graph[vertex].neighbours)
+{
+if (vertex != v) {
+if (graph[v].color == white) {
+graph[v].color = red;
+bool res = bipartite(graph, v);
+if (res == false) {
+return false;
+}
+} else if (graph[v].color == blue) {
+return false;
+}
+}
+}
+}
+return true;
+}
 
 int main() {
-    char string1[100];
-    char string2[100];
-    scanf("%s", string1);
-    scanf("%s", string2);
-//1.Осуществить конкатенацию (сложение) двух строк.
-    strcat(string1, string2);
-    printf("%s \n", string1);
-//4.Осуществить сравнение первых n символов двух строк.
-    int n;
-    scanf("%d", &n);
-    if (strncmp(string1, string2, n) == 0)
-        printf("Same\n");
-    else printf("Different\n");
-// 5.Осуществить копирование одной строки в другую строку.
-    char string3[100];
-    strcpy(string3, string2);
-    printf("%s\n", string3);
-// 8.Осуществить поиск в строке первого вхождения указанного символа.
-    int ch = 'x';
-    char *ach;
-    ach = strchr(string2, ch);
-    if (ach == NULL)
-        printf("symbol not found\n");
-    else
-        printf("symbol = %d\n", ach - string2 + 1);
-// 11.Определить длину отрезка одной строки, содержащего символы из множества символов,
-//входящих во вторую строку.
-    int y;
-    y = strspn(string1, string2);
-    printf("%d", y);
-    return 0;
+FILE* fin = fopen("bipartite.in", "r");
+FILE* fout = fopen("bipartite.out", "w");
+
+int n, m;
+fscanf(fin, "%d %d", &n, &m);
+
+vector<vertex> graph(n);
+for (int i = 0; i < m; i++) //зачитываем ребра из файла
+{
+int x, y;
+fscanf(fin, "%d %d", &x, &y);
+x--; //уменьшаем, т.к. индексация с нуля
+y--;
+graph[x].neighbours.push_back(y); //кладём в вектор
+graph[y].neighbours.push_back(x);
+}
+
+for (int v = 0; v < n; v++) {
+if (graph[v].color == white) {
+if (bipartite(graph, v) == false) {
+fprintf(fout, "NO");
+return 0;
+}
+}
+}
+fprintf(fout, "YES");
+return 0;
 }
